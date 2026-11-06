@@ -13,7 +13,6 @@
 </head>
 <body>
   <a class="skip" href="#conteudo">Saltar para o conteúdo</a>
-  <canvas id="particles" aria-hidden="true"></canvas>
   <div class="glow-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
@@ -27,6 +26,7 @@
         <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" id="menuBtn">Menu</button>
         <nav class="nav-links" id="menu" aria-label="Seções">
           <a href="#arquitetura">Arquitetura</a>
+          <a href="#empresas">Empresas</a>
           <a href="#certificados">Certificados</a>
           <a href="#empresa">MRN / empresa</a>
           <a href="#projetos">Projetos</a>
@@ -37,7 +37,8 @@
 
     <main id="conteudo">
       <section class="hero" id="topo">
-        <div>
+        <canvas id="hero-morph" class="hero-morph" aria-hidden="true"></canvas>
+        <div class="hero-copy">
           <p class="kicker">Staff Engineer · Solutions Architect · Brasil</p>
           <h1><span class="gradient-text">Paulo Marne Barros</span></h1>
           <p class="typed-line" aria-live="polite"><strong id="typed"></strong><span class="cursor" aria-hidden="true"></span></p>
@@ -56,14 +57,33 @@
             <span class="chip">TOGAF · C4 · ADR</span>
           </div>
         </div>
-        <div class="hero-visual" aria-hidden="true">
-          <div class="orbit"></div>
-          <div class="orbit inner"></div>
-          <div class="core glass">
-            <small>foco atual</small>
-            <strong>Arquitetura end-to-end</strong>
-            <span style="color:var(--muted);font-size:.9rem">AWS · GCP · Azure</span>
-          </div>
+      </section>
+
+      <section id="empresas" class="empresas-section" aria-labelledby="empresas-title">
+        <div class="section-head reveal">
+          <div class="eyebrow">Trajetória</div>
+          <h2 id="empresas-title">Empresas onde atuei</h2>
+          <p>Nomes extraídos do currículo — empregadores e clientes citados na experiência profissional. Sem logotipos.</p>
+        </div>
+        <div class="company-cloud" id="company-cloud">
+          <span class="co co-lg">ATI Pernambuco</span>
+          <span class="co">TJBA</span>
+          <span class="co co-md">CNJ</span>
+          <span class="co">Jeitto</span>
+          <span class="co co-lg">Banco Rendimento</span>
+          <span class="co co-md">Bradesco</span>
+          <span class="co">Next</span>
+          <span class="co co-md">Meta</span>
+          <span class="co">BRQ</span>
+          <span class="co co-lg">Marne Consultoria</span>
+          <span class="co">AIS Tecnologia</span>
+          <span class="co">GVT</span>
+          <span class="co co-md">EBS</span>
+          <span class="co">S&amp;S</span>
+          <span class="co co-md">PGE</span>
+          <span class="co">Connect Soft</span>
+          <span class="co">Corporação Christus</span>
+          <span class="co co-md">Prefeitura de Fortaleza</span>
         </div>
       </section>
 
@@ -471,5 +491,6 @@
     </footer>
   </div>
   <script src="script.js"></script>
+  <script src="assets/particle-morph.js"></script>
 </body>
 </html>
