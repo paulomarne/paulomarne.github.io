@@ -8,6 +8,7 @@
   const canvas = document.getElementById("hero-morph");
   if (!canvas) return;
 
+  const host = canvas.parentElement || canvas;
   const ctx = canvas.getContext("2d", { alpha: true });
   const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const isMobile = () => window.matchMedia("(max-width: 760px)").matches;
@@ -37,7 +38,21 @@
   let curX, curY, curZ, tgtX, tgtY, tgtZ, fromX, fromY, fromZ, phase;
   let scrX, scrY, depth, bucket, hist, offsets, order;
 
-  const SHAPES = ["sphere", "pm", "cloud", "bars", "network", "db", "wave"];
+  const SHAPES = [
+    "line",
+    "bars",
+    "donut",
+    "pipeline",
+    "cloud",
+    "db",
+    "network",
+    "circuit",
+    "code",
+    "pm",
+    "wave",
+  ];
+  const FLOW = { pipeline: true, network: true, circuit: true };
+
   let shapeIndex = 0;
   let morphT = 0;
   let morphing = false;
@@ -45,8 +60,8 @@
   let cssW = 0;
   let cssH = 0;
   let dpr = 1;
-  let yaw = 0.42;
-  let pitch = 0.36;
+  let yaw = 0.16;
+  let pitch = 0.18;
   let targetYawOff = 0;
   let targetPitchOff = 0;
   let yawOff = 0;
@@ -58,6 +73,8 @@
   let visible = true;
   let last = performance.now();
   let elapsed = 0;
+  let sized = false;
+  let resizeQueued = false;
 
   function easeInOutCubic(t) {
     return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
@@ -85,64 +102,143 @@
     for (let i = 0; i < n; i++) phase[i] = Math.random() * Math.PI * 2;
   }
 
-  function fillShape(name, ox, oy, oz) {
-    const n = COUNT;
-    const rnd = (i, salt) => {
-      const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
-      return x - Math.floor(x);
-    };
+  function rnd(i, salt) {
+    const x = Math.sin(i * 12.9898 + salt * 78.233) * 43758.5453;
+    return x - Math.floor(x);
+  }
 
-    if (name === "sphere") {
+  function lerp(a, b, t) {
+    return a + (b - a) * t;
+  }
+
+  function samplePolyline(points, u) {
+    const segs = points.length - 1;
+    const x = u * segs;
+    const i = Math.min(segs - 1, Math.max(0, Math.floor(x)));
+    const t = x - i;
+    const a = points[i];
+    const b = points[i + 1];
+    return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2] || 0, b[2] || 0, t)];
+  }
+
+  function fillShape(name, ox, oy, oz, time) {
+    const n = COUNT;
+    const tnow = time || 0;
+
+    if (name === "line") {
+      const pts = [];
+      const steps = 8;
+      for (let k = 0; k <= steps; k++) {
+        const x = (k / steps - 0.5) * 2.15;
+        const rise = (k / steps) * 1.35 - 0.55;
+        const wobble = 0.08 * Math.sin(k * 0.9);
+        pts.push([x, rise + wobble, 0]);
+      }
       for (let i = 0; i < n; i++) {
-        const u = rnd(i, 1);
-        const v = rnd(i, 2);
-        const theta = 2 * Math.PI * u;
-        const phi = Math.acos(2 * v - 1);
-        const r = 0.92 + 0.08 * rnd(i, 3);
-        ox[i] = r * Math.sin(phi) * Math.cos(theta);
-        oy[i] = r * Math.cos(phi);
-        oz[i] = r * Math.sin(phi) * Math.sin(theta);
+        const kind = rnd(i, 1);
+        if (kind < 0.12) {
+          ox[i] = (rnd(i, 2) - 0.5) * 2.2;
+          oy[i] = -0.72 + (rnd(i, 3) - 0.5) * 0.04;
+          oz[i] = (rnd(i, 4) - 0.5) * 0.06;
+        } else if (kind < 0.2) {
+          ox[i] = -1.08 + (rnd(i, 5) - 0.5) * 0.04;
+          oy[i] = (rnd(i, 6) - 0.5) * 1.55;
+          oz[i] = (rnd(i, 7) - 0.5) * 0.06;
+        } else if (kind < 0.72) {
+          const p = samplePolyline(pts, rnd(i, 8));
+          ox[i] = p[0] + (rnd(i, 9) - 0.5) * 0.03;
+          oy[i] = p[1] + (rnd(i, 10) - 0.5) * 0.03;
+          oz[i] = (rnd(i, 11) - 0.5) * 0.08;
+        } else if (kind < 0.88) {
+          const ki = Math.floor(rnd(i, 12) * pts.length);
+          const p = pts[ki];
+          const rad = 0.07 * Math.sqrt(rnd(i, 13));
+          const ang = rnd(i, 14) * Math.PI * 2;
+          ox[i] = p[0] + rad * Math.cos(ang);
+          oy[i] = p[1] + rad * Math.sin(ang);
+          oz[i] = (rnd(i, 15) - 0.5) * 0.1;
+        } else {
+          const u = rnd(i, 16);
+          const p = samplePolyline(pts, u);
+          const base = samplePolyline(pts, Math.max(0, u - 0.02));
+          ox[i] = p[0] + (rnd(i, 17) - 0.5) * 0.05;
+          oy[i] = lerp(-0.7, p[1], rnd(i, 18) * 0.85);
+          oz[i] = (rnd(i, 19) - 0.5) * 0.12;
+          void base;
+        }
       }
       return;
     }
 
-    if (name === "pm") {
-      // Sample two block letters P and M on a coarse grid, then jitter.
-      const cells = [];
-      const put = (cx, cy, on) => {
-        if (on) cells.push([cx, cy]);
-      };
-      // P: x 0..4, y 0..8
-      for (let y = 0; y <= 8; y++) {
-        for (let x = 0; x <= 4; x++) {
-          const left = x === 0;
-          const top = y === 0 && x < 4;
-          const mid = y === 4 && x < 4;
-          const rightTop = x === 4 && y > 0 && y < 4;
-          put(x - 6.2, 4 - y, left || top || mid || rightTop);
-        }
-      }
-      // M
-      for (let y = 0; y <= 8; y++) {
-        for (let x = 0; x <= 6; x++) {
-          const left = x === 0;
-          const right = x === 6;
-          const diagL = x === Math.floor(y * 0.75) && y <= 4;
-          const diagR = x === 6 - Math.floor(y * 0.75) && y <= 4;
-          put(x + 0.6, 4 - y, left || right || diagL || diagR);
-        }
-      }
+    if (name === "bars") {
+      const bars = 7;
       for (let i = 0; i < n; i++) {
-        const c = cells[i % cells.length];
-        ox[i] = (c[0] / 7) * 1.55 + (rnd(i, 4) - 0.5) * 0.06;
-        oy[i] = (c[1] / 5) * 1.15 + (rnd(i, 5) - 0.5) * 0.06;
-        oz[i] = (rnd(i, 6) - 0.5) * 0.28;
+        const bi = i % bars;
+        const t = Math.floor(i / bars) / Math.max(1, Math.floor(n / bars) - 1);
+        const h = 0.35 + 0.95 * Math.abs(Math.sin(bi * 1.1 + 0.4));
+        ox[i] = (bi / (bars - 1) - 0.5) * 2.05 + (rnd(i, 10) - 0.5) * 0.06;
+        oy[i] = t * h - 0.72 + h * 0.02;
+        oz[i] = (rnd(i, 11) - 0.5) * 0.28;
+      }
+      return;
+    }
+
+    if (name === "donut") {
+      const segments = 4;
+      const spans = [0.28, 0.22, 0.3, 0.2];
+      let acc = 0;
+      const starts = spans.map((s) => {
+        const a = acc;
+        acc += s;
+        return a;
+      });
+      for (let i = 0; i < n; i++) {
+        const si = i % segments;
+        const u = starts[si] + rnd(i, 20) * spans[si] * 0.92;
+        const ang = u * Math.PI * 2 - Math.PI / 2;
+        const rad = 0.72 + rnd(i, 21) * 0.28;
+        ox[i] = rad * Math.cos(ang);
+        oy[i] = rad * Math.sin(ang) * 0.92;
+        oz[i] = (rnd(i, 22) - 0.5) * 0.22;
+      }
+      return;
+    }
+
+    if (name === "pipeline") {
+      const boxes = [-1.05, -0.35, 0.35, 1.05];
+      const bw = 0.28;
+      const bh = 0.2;
+      const arrows = [
+        [boxes[0] + bw, boxes[1] - bw],
+        [boxes[1] + bw, boxes[2] - bw],
+        [boxes[2] + bw, boxes[3] - bw],
+      ];
+      for (let i = 0; i < n; i++) {
+        const kind = rnd(i, 23);
+        if (kind < 0.55) {
+          const bi = Math.floor(rnd(i, 24) * 4);
+          ox[i] = boxes[bi] + (rnd(i, 25) - 0.5) * bw * 2;
+          oy[i] = (rnd(i, 26) - 0.5) * bh * 2;
+          oz[i] = (rnd(i, 27) - 0.5) * 0.16;
+        } else {
+          const ai = Math.floor(rnd(i, 28) * arrows.length);
+          const seg = arrows[ai];
+          const u = (rnd(i, 29) + tnow * 0.32) % 1;
+          ox[i] = lerp(seg[0], seg[1], u);
+          oy[i] = (rnd(i, 30) - 0.5) * 0.06;
+          oz[i] = (rnd(i, 31) - 0.5) * 0.08;
+          if (rnd(i, 32) > 0.7) {
+            const tip = u > 0.72;
+            if (tip) {
+              oy[i] += (u - 0.72) * (rnd(i, 33) > 0.5 ? 0.12 : -0.12);
+            }
+          }
+        }
       }
       return;
     }
 
     if (name === "cloud") {
-      // Soft cloud: three overlapping ellipsoids + wisps.
       const blobs = [
         [0, 0.05, 0, 1.1, 0.55, 0.7],
         [-0.7, -0.05, 0.1, 0.7, 0.45, 0.55],
@@ -164,21 +260,30 @@
       return;
     }
 
-    if (name === "bars") {
-      const bars = 7;
+    if (name === "db") {
+      const cyls = [
+        [0, 0.58, 0.82, 0.2],
+        [0, 0.02, 0.82, 0.2],
+        [0, -0.54, 0.82, 0.2],
+      ];
       for (let i = 0; i < n; i++) {
-        const bi = i % bars;
-        const t = Math.floor(i / bars) / Math.max(1, Math.floor(n / bars) - 1);
-        const h = 0.35 + 0.9 * Math.abs(Math.sin(bi * 1.1 + 0.4));
-        ox[i] = (bi / (bars - 1) - 0.5) * 2.1 + (rnd(i, 10) - 0.5) * 0.08;
-        oy[i] = t * h - h * 0.5;
-        oz[i] = (rnd(i, 11) - 0.5) * 0.35;
+        const c = cyls[i % 3];
+        const u = rnd(i, 16);
+        const v = rnd(i, 17);
+        const ang = 2 * Math.PI * u;
+        const onRim = v > 0.18;
+        const rr = onRim ? c[2] : c[2] * Math.sqrt(v / 0.18);
+        const yy = onRim
+          ? c[1] + (rnd(i, 18) - 0.5) * c[3] * 1.7
+          : c[1] + (v > 0.5 ? 1 : -1) * c[3];
+        ox[i] = c[0] + rr * Math.cos(ang);
+        oy[i] = yy;
+        oz[i] = rr * Math.sin(ang) * 0.48;
       }
       return;
     }
 
     if (name === "network") {
-      // Hexagon ring + inner nodes + spokes.
       const nodes = [];
       const R = 1.05;
       for (let k = 0; k < 6; k++) {
@@ -196,19 +301,17 @@
       for (let k = 0; k < 6; k++) edges.push([6, 7 + k]);
       for (let k = 0; k < 6; k++) edges.push([k, 7 + k]);
 
-      let e = 0;
       for (let i = 0; i < n; i++) {
-        if (i < nodes.length * 18) {
+        if (i < nodes.length * 22) {
           const nd = nodes[i % nodes.length];
-          ox[i] = nd[0] + (rnd(i, 12) - 0.5) * 0.08;
-          oy[i] = nd[1] + (rnd(i, 13) - 0.5) * 0.08;
-          oz[i] = nd[2] + (rnd(i, 14) - 0.5) * 0.08;
+          ox[i] = nd[0] + (rnd(i, 12) - 0.5) * 0.09;
+          oy[i] = nd[1] + (rnd(i, 13) - 0.5) * 0.09;
+          oz[i] = nd[2] + (rnd(i, 14) - 0.5) * 0.09;
         } else {
-          const ed = edges[e % edges.length];
-          e++;
+          const ed = edges[i % edges.length];
           const a = nodes[ed[0]];
           const b = nodes[ed[1]];
-          const t = rnd(i, 15);
+          const t = (rnd(i, 15) + tnow * 0.22) % 1;
           ox[i] = a[0] + (b[0] - a[0]) * t;
           oy[i] = a[1] + (b[1] - a[1]) * t;
           oz[i] = a[2] + (b[2] - a[2]) * t;
@@ -217,29 +320,87 @@
       return;
     }
 
-    if (name === "db") {
-      // Three stacked cylinders (database icon silhouette).
-      const cyls = [
-        [0, 0.55, 0.85, 0.22],
-        [0, 0.0, 0.85, 0.22],
-        [0, -0.55, 0.85, 0.22],
-      ];
+    if (name === "circuit") {
+      const traces = [];
+      for (let k = -2; k <= 2; k++) {
+        const y = k * 0.22;
+        traces.push([[-1.15, y, 0], [-0.5, y, 0]]);
+        traces.push([[1.15, y, 0], [0.5, y, 0]]);
+      }
+      for (let k = -2; k <= 2; k++) {
+        const x = k * 0.18;
+        traces.push([[x, 1.05, 0], [x, 0.5, 0]]);
+        traces.push([[x, -1.05, 0], [x, -0.5, 0]]);
+      }
       for (let i = 0; i < n; i++) {
-        const c = cyls[i % 3];
-        const u = rnd(i, 16);
-        const v = rnd(i, 17);
-        const ang = 2 * Math.PI * u;
-        const onRim = v > 0.22;
-        const rr = onRim ? c[2] : c[2] * Math.sqrt(v / 0.22);
-        const yy = onRim ? c[1] + (rnd(i, 18) - 0.5) * c[3] * 1.6 : c[1] + (v > 0.5 ? 1 : -1) * c[3];
-        ox[i] = c[0] + rr * Math.cos(ang);
-        oy[i] = yy;
-        oz[i] = rr * Math.sin(ang) * 0.55;
+        const kind = rnd(i, 41);
+        if (kind < 0.5) {
+          ox[i] = (rnd(i, 42) - 0.5) * 0.88;
+          oy[i] = (rnd(i, 43) - 0.5) * 0.88;
+          oz[i] = (rnd(i, 44) - 0.5) * 0.1;
+        } else if (kind < 0.66) {
+          const pin = Math.floor(rnd(i, 45) * 10) - 2;
+          const axis = rnd(i, 46) > 0.5;
+          const side = rnd(i, 47) > 0.5 ? 1 : -1;
+          if (axis) {
+            ox[i] = side * 0.52 + (rnd(i, 48) - 0.5) * 0.1;
+            oy[i] = pin * 0.18 + (rnd(i, 49) - 0.5) * 0.05;
+          } else {
+            ox[i] = pin * 0.16 + (rnd(i, 50) - 0.5) * 0.05;
+            oy[i] = side * 0.52 + (rnd(i, 51) - 0.5) * 0.1;
+          }
+          oz[i] = (rnd(i, 52) - 0.5) * 0.06;
+        } else {
+          const tr = traces[Math.floor(rnd(i, 53) * traces.length)];
+          const u = (rnd(i, 54) + tnow * 0.28) % 1;
+          const p = samplePolyline(tr, u);
+          ox[i] = p[0] + (rnd(i, 55) - 0.5) * 0.025;
+          oy[i] = p[1] + (rnd(i, 56) - 0.5) * 0.025;
+          oz[i] = 0;
+        }
       }
       return;
     }
 
-    // wave — default wavy grid surface
+    if (name === "code") {
+      const glyphs = [
+        [[0.06, 0.78, 0], [-0.62, 0, 0], [0.06, -0.78, 0]],
+        [[0.22, 0.74, 0], [-0.22, -0.74, 0]],
+        [[-0.06, 0.78, 0], [0.62, 0, 0], [-0.06, -0.78, 0]],
+      ];
+      const shift = [-0.7, 0, 0.7];
+      for (let i = 0; i < n; i++) {
+        const gi = i % 3;
+        const p = samplePolyline(glyphs[gi], rnd(i, 54));
+        const nx = gi === 1 ? -0.22 : (p[1] > 0 ? 0.35 : -0.35);
+        const ny = gi === 1 ? 0.08 : (gi === 0 ? 0.25 : -0.25);
+        const mag = Math.hypot(nx, ny) || 1;
+        const thick = (rnd(i, 55) - 0.5) * 0.2;
+        ox[i] = shift[gi] + p[0] + (nx / mag) * thick;
+        oy[i] = p[1] + (ny / mag) * thick * 0.4;
+        oz[i] = (rnd(i, 56) - 0.5) * 0.16;
+      }
+      return;
+    }
+
+    if (name === "pm") {
+      const strokes = [
+        [[-1.2, 0.95, 0], [-1.2, -0.95, 0]],
+        [[-1.2, 0.95, 0], [-0.42, 0.95, 0], [-0.18, 0.72, 0], [-0.18, 0.28, 0], [-0.42, 0.05, 0], [-1.2, 0.05, 0]],
+        [[0.12, -0.95, 0], [0.12, 0.95, 0]],
+        [[1.22, -0.95, 0], [1.22, 0.95, 0]],
+        [[0.12, 0.95, 0], [0.67, -0.05, 0], [1.22, 0.95, 0]],
+      ];
+      for (let i = 0; i < n; i++) {
+        const st = strokes[i % strokes.length];
+        const p = samplePolyline(st, rnd(i, 4));
+        ox[i] = p[0] + (rnd(i, 5) - 0.5) * 0.09;
+        oy[i] = p[1] + (rnd(i, 6) - 0.5) * 0.09;
+        oz[i] = (rnd(i, 7) - 0.5) * 0.16;
+      }
+      return;
+    }
+
     const cols = Math.ceil(Math.sqrt(n * 1.35));
     const rows = Math.ceil(n / cols);
     for (let i = 0; i < n; i++) {
@@ -248,7 +409,7 @@
       const x = (c / (cols - 1) - 0.5) * 2.4;
       const z = (r / Math.max(1, rows - 1) - 0.5) * 2.1;
       const y =
-        0.22 * Math.sin(2.1 * x) +
+        0.22 * Math.sin(2.1 * x + tnow * 0.6) +
         0.16 * Math.cos(2.3 * z) +
         0.1 * Math.sin(1.4 * x + 1.7 * z) -
         0.06;
@@ -265,32 +426,55 @@
   }
 
   function setTarget(name) {
-    fillShape(name, tgtX, tgtY, tgtZ);
+    fillShape(name, tgtX, tgtY, tgtZ, 0);
   }
 
   function initPoints() {
     const n = isMobile() ? 1200 : 2400;
     alloc(n);
-    fillShape(SHAPES[0], curX, curY, curZ);
+    fillShape(SHAPES[shapeIndex] || SHAPES[0], curX, curY, curZ, 0);
     fromX.set(curX);
     fromY.set(curY);
     fromZ.set(curZ);
-    shapeIndex = 0;
-    setTarget(SHAPES[0]);
+    setTarget(SHAPES[shapeIndex] || SHAPES[0]);
     morphT = 0;
     elapsed = 0;
   }
 
   function resize() {
-    const rect = canvas.getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    cssW = Math.max(1, rect.width);
-    cssH = Math.max(1, rect.height);
-    canvas.width = Math.round(cssW * dpr);
-    canvas.height = Math.round(cssH * dpr);
+    const rect = host.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+    if (w < 8 || h < 8) {
+      if (!resizeQueued) {
+        resizeQueued = true;
+        requestAnimationFrame(() => {
+          resizeQueued = false;
+          resize();
+        });
+      }
+      return;
+    }
+    const nextDpr = Math.min(Math.max(window.devicePixelRatio || 1, 1), 2);
+    cssW = w;
+    cssH = h;
+    dpr = nextDpr;
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    const bw = Math.max(1, Math.round(w * dpr));
+    const bh = Math.max(1, Math.round(h * dpr));
+    if (canvas.width !== bw || canvas.height !== bh) {
+      canvas.width = bw;
+      canvas.height = bh;
+    }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const want = isMobile() ? 1200 : 2400;
-    if (want !== COUNT) initPoints();
+    if (!sized) {
+      sized = true;
+      initPoints();
+    } else if (want !== COUNT) {
+      initPoints();
+    }
   }
 
   function advanceMorph(dt) {
@@ -299,9 +483,14 @@
     if (local < HOLD) {
       morphT = 0;
       morphing = false;
-      curX.set(tgtX);
-      curY.set(tgtY);
-      curZ.set(tgtZ);
+      const name = SHAPES[shapeIndex];
+      if (FLOW[name] && !reduceMotion) {
+        fillShape(name, curX, curY, curZ, elapsed);
+      } else {
+        curX.set(tgtX);
+        curY.set(tgtY);
+        curZ.set(tgtZ);
+      }
     } else {
       if (!morphing) {
         snapshotFrom();
@@ -320,6 +509,7 @@
   }
 
   function draw() {
+    if (!sized || cssW < 8 || cssH < 8 || !COUNT) return;
     ctx.clearRect(0, 0, cssW, cssH);
     const scale = 0.38 * Math.min(cssW, cssH);
     const cx = cssW / 2;
@@ -336,7 +526,6 @@
       let x = curX[i];
       let yy = curY[i];
       let z = curZ[i];
-      // tiny idle drift
       x += 0.01 * Math.sin(0.7 * elapsed + phase[i]);
       yy += 0.01 * Math.cos(0.55 * elapsed + phase[i]);
 
@@ -398,9 +587,6 @@
       const start = run;
       const end = start + hist[b];
       run = end;
-      if (bucket[order[start]] !== lastStyle || start === end) {
-        /* style set inside loop */
-      }
       for (let oi = start; oi < end; oi++) {
         const i = order[oi];
         if (bucket[i] !== lastStyle) {
@@ -462,15 +648,15 @@
     ptrY = -9999;
   }
 
-  initPoints();
   resize();
-  draw();
+  if (sized) draw();
 
   const ro = new ResizeObserver(() => {
     resize();
     if (reduceMotion) draw();
   });
-  ro.observe(canvas);
+  ro.observe(host);
+  if (host !== canvas) ro.observe(document.querySelector(".hero") || host);
 
   const io = new IntersectionObserver(
     ([entry]) => {
@@ -483,15 +669,38 @@
     },
     { rootMargin: "80px" }
   );
-  io.observe(canvas);
+  io.observe(host);
 
   document.addEventListener("visibilitychange", () => {
     if (!document.hidden && visible && !reduceMotion) start();
   });
+
+  window.addEventListener("resize", resize, { passive: true });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(() => {
+      resize();
+      if (reduceMotion) draw();
+    });
+  }
 
   if (!reduceMotion) {
     window.addEventListener("pointermove", onPointer, { passive: true });
     document.documentElement.addEventListener("pointerleave", onLeave);
     start();
   }
+
+  window.__heroMorphSet = function (name) {
+    const i = SHAPES.indexOf(name);
+    if (i < 0 || !COUNT) return false;
+    shapeIndex = i;
+    setTarget(name);
+    fillShape(name, curX, curY, curZ, 0.8);
+    fromX.set(curX);
+    fromY.set(curY);
+    fromZ.set(curZ);
+    elapsed = 0.4;
+    morphing = false;
+    draw();
+    return true;
+  };
 })();
