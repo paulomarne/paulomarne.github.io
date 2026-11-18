@@ -1,37 +1,45 @@
 (() => {
   document.documentElement.classList.add("js");
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const i18n = () => window.SiteI18n;
 
-  const phrases = [
-    "Staff Engineer / Solutions Architect",
-    "Arquiteturas end-to-end em AWS, GCP e Azure",
-    "Plataformas de IA, RAG e sistemas distribuídos",
-    "Mobile nativo, híbrido e governança (TOGAF, C4, ADR)"
-  ];
-  const typed = document.getElementById("typed");
-  if (typed) {
+  let typedTimer = 0;
+  const clearTyped = () => {
+    if (typedTimer) {
+      clearTimeout(typedTimer);
+      typedTimer = 0;
+    }
+  };
+
+  const startTyped = () => {
+    const typed = document.getElementById("typed");
+    if (!typed || !i18n()) return;
+    const phrases = i18n().list("typedPhrases");
+    clearTyped();
+    if (!phrases.length) return;
     if (reduce) {
       typed.textContent = phrases[0];
-    } else {
-      let pi = 0, ci = 0, dir = 1;
-      const tick = () => {
-        const word = phrases[pi];
-        ci += dir;
-        typed.textContent = word.slice(0, ci);
-        if (dir === 1 && ci === word.length) {
-          dir = -1;
-          setTimeout(tick, 1600);
-          return;
-        }
-        if (dir === -1 && ci === 0) {
-          dir = 1;
-          pi = (pi + 1) % phrases.length;
-        }
-        setTimeout(tick, dir === 1 ? 42 : 24);
-      };
-      tick();
+      return;
     }
-  }
+    let pi = 0, ci = 0, dir = 1;
+    const tick = () => {
+      const word = phrases[pi] || "";
+      ci += dir;
+      typed.textContent = word.slice(0, Math.max(0, ci));
+      if (dir === 1 && ci >= word.length) {
+        dir = -1;
+        typedTimer = setTimeout(tick, 1600);
+        return;
+      }
+      if (dir === -1 && ci <= 0) {
+        dir = 1;
+        ci = 0;
+        pi = (pi + 1) % phrases.length;
+      }
+      typedTimer = setTimeout(tick, dir === 1 ? 42 : 24);
+    };
+    tick();
+  };
 
   const nav = document.getElementById("nav");
   const menuBtn = document.getElementById("menuBtn");
@@ -80,51 +88,85 @@
   }
 
   const pinNames = [
-    ["aws-ml-readiness.png", "Pin do curso AWS ML Readiness"],
-    ["aws-cloud-practitioner-essentials.png", "Pin do curso AWS Cloud Practitioner Essentials"],
-    ["aws-k8s-serverless.png", "Pin do treinamento Kubernetes AWS"],
-    ["azure-az900.png", "Pin Azure AZ-900"],
-    ["azure-az305.png", "Pin Azure AZ-305"],
-    ["azure-sc200.png", "Pin Azure SC-200"],
-    ["aws-pin-1.png", "Pin extra AWS 1"],
-    ["aws-pin-2.png", "Pin extra AWS 2"],
-    ["aws-pin-3.png", "Pin extra AWS 3"],
-    ["aws-pin-4.png", "Pin extra AWS 4"],
-    ["azure-pin-1.png", "Pin extra Azure 1"],
-    ["azure-pin-2.png", "Pin extra Azure 2"],
-    ["azure-pin-3.png", "Pin extra Azure 3"],
-    ["azure-pin-4.png", "Pin extra Azure 4"]
+    ["aws-ml-readiness.png", "pinAltMl"],
+    ["aws-cloud-practitioner-essentials.png", "pinAltCp"],
+    ["aws-k8s-serverless.png", "pinAltK8s"],
+    ["azure-az900.png", "pinAltAz900"],
+    ["azure-az305.png", "pinAltAz305"],
+    ["azure-sc200.png", "pinAltSc200"],
+    ["aws-pin-1.png", "pinAltAws1"],
+    ["aws-pin-2.png", "pinAltAws2"],
+    ["aws-pin-3.png", "pinAltAws3"],
+    ["aws-pin-4.png", "pinAltAws4"],
+    ["azure-pin-1.png", "pinAltAzure1"],
+    ["azure-pin-2.png", "pinAltAzure2"],
+    ["azure-pin-3.png", "pinAltAzure3"],
+    ["azure-pin-4.png", "pinAltAzure4"]
   ];
+
+  let pinMode = "idle";
+  let selectedPins = [];
   const pinGrid = document.getElementById("pinGrid");
+  const t = (key) => (i18n() ? i18n().t(key) : key);
+
   const renderWaiting = () => {
+    if (!pinGrid) return;
+    pinMode = "waiting";
+    pinGrid.replaceChildren();
     pinNames.slice(0, 6).forEach(([name]) => {
       const slot = document.createElement("div");
       slot.className = "pin-slot glass waiting";
-      slot.innerHTML = "<span>Aguardando pin</span><div class=\"fname\">" + name + "</div>";
+      const span = document.createElement("span");
+      span.setAttribute("data-i18n", "pinWaiting");
+      span.textContent = t("pinWaiting");
+      const fname = document.createElement("div");
+      fname.className = "fname";
+      fname.textContent = name;
+      slot.append(span, fname);
       pinGrid.appendChild(slot);
     });
   };
+
+  const renderSelected = () => {
+    if (!pinGrid) return;
+    pinMode = "selected";
+    pinGrid.replaceChildren();
+    selectedPins.forEach(([name, key]) => {
+      const slot = document.createElement("div");
+      slot.className = "pin-slot glass";
+      const img = document.createElement("img");
+      img.alt = t(key);
+      img.setAttribute("data-i18n-attr", "alt:" + key);
+      img.src = "assets/certs/" + name;
+      img.addEventListener("error", () => slot.setAttribute("hidden", ""));
+      slot.appendChild(img);
+      pinGrid.appendChild(slot);
+    });
+  };
+
+  const refreshPins = () => {
+    if (pinMode === "waiting") renderWaiting();
+    else if (pinMode === "selected") renderSelected();
+  };
+
   if (pinGrid) {
     fetch("assets/certs/pins.json", { cache: "no-store" })
       .then((r) => (r.ok ? r.json() : { files: [] }))
       .then((data) => {
         const listed = new Set((data && data.files) || []);
-        const selected = pinNames.filter(([name]) => listed.has(name));
-        if (!selected.length) {
+        selectedPins = pinNames.filter(([name]) => listed.has(name));
+        if (!selectedPins.length) {
           renderWaiting();
           return;
         }
-        selected.forEach(([name, label]) => {
-          const slot = document.createElement("div");
-          slot.className = "pin-slot glass";
-          const img = document.createElement("img");
-          img.alt = label;
-          img.src = "assets/certs/" + name;
-          img.addEventListener("error", () => slot.setAttribute("hidden", ""));
-          slot.appendChild(img);
-          pinGrid.appendChild(slot);
-        });
+        renderSelected();
       })
       .catch(renderWaiting);
   }
+
+  startTyped();
+  window.addEventListener("site:langchange", () => {
+    startTyped();
+    refreshPins();
+  });
 })();

@@ -3,16 +3,37 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Paulo Marne Barros — Staff Engineer e Solutions Architect. Portfólio de arquiteturas em AWS, GCP e Azure, separado da empresa MRN Serviços de TI.">
-  <title>Paulo Marne Barros — Staff Engineer / Solutions Architect</title>
+  <meta name="description" content="Paulo Marne Barros — Staff Engineer e Solutions Architect. Portfólio de arquiteturas em AWS, GCP e Azure, separado da empresa MRN Serviços de TI." data-i18n-attr="content:metaDesc">
+  <title data-i18n="pageTitle">Paulo Marne Barros — Staff Engineer / Solutions Architect</title>
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script>
+    (function () {
+      var map = { pt: "pt-BR", en: "en", es: "es", fr: "fr", de: "de" };
+      var lang = "pt";
+      try {
+        var q = new URLSearchParams(location.search).get("lang");
+        if (q && map[q.toLowerCase()]) lang = q.toLowerCase();
+        else {
+          var saved = localStorage.getItem("site-lang");
+          if (saved && map[saved]) lang = saved;
+          else {
+            var nav = String(navigator.language || navigator.userLanguage || "pt").toLowerCase();
+            var short = nav.slice(0, 2);
+            if (map[short]) lang = short;
+          }
+        }
+      } catch (e) {}
+      document.documentElement.lang = map[lang];
+      document.documentElement.setAttribute("data-lang", lang);
+    })();
+  </script>
 </head>
 <body>
-  <a class="skip" href="#conteudo">Saltar para o conteúdo</a>
+  <a class="skip" href="#conteudo" data-i18n="skip">Saltar para o conteúdo</a>
   <div class="glow-orbs" aria-hidden="true"><span></span><span></span><span></span></div>
   <div class="grid-overlay" aria-hidden="true"></div>
 
@@ -23,14 +44,26 @@
           <span class="brand-mark">PM</span>
           Paulo Marne
         </a>
-        <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" id="menuBtn">Menu</button>
-        <nav class="nav-links" id="menu" aria-label="Seções">
-          <a href="#arquitetura">Arquitetura</a>
-          <a href="#empresas">Empresas</a>
-          <a href="#certificados">Certificados</a>
-          <a href="#empresa">MRN / empresa</a>
-          <a href="#projetos">Projetos</a>
-          <a href="#contato">Contato</a>
+        <div class="nav-tools">
+          <div class="lang-switcher">
+            <label class="visually-hidden" for="langSelect" data-i18n="langLabel">Idioma</label>
+            <select id="langSelect" data-i18n-aria="langLabel">
+              <option value="pt" lang="pt">Português</option>
+              <option value="en" lang="en">English</option>
+              <option value="es" lang="es">Español</option>
+              <option value="fr" lang="fr">Français</option>
+              <option value="de" lang="de">Deutsch</option>
+            </select>
+          </div>
+          <button class="menu-btn" type="button" aria-expanded="false" aria-controls="menu" id="menuBtn" data-i18n="menu">Menu</button>
+        </div>
+        <nav class="nav-links" id="menu" aria-label="Seções" data-i18n-aria="navSections">
+          <a href="#arquitetura" data-i18n="navArch">Arquitetura</a>
+          <a href="#empresas" data-i18n="navCompanies">Empresas</a>
+          <a href="#certificados" data-i18n="navCerts">Certificados</a>
+          <a href="#empresa" data-i18n="navMrn">MRN / empresa</a>
+          <a href="#projetos" data-i18n="navProjects">Projetos</a>
+          <a href="#contato" data-i18n="navContact">Contato</a>
         </nav>
       </div>
     </header>
@@ -38,21 +71,22 @@
     <main id="conteudo">
       <section class="hero" id="topo">
         <div class="hero-copy">
-          <p class="kicker">Staff Engineer · Solutions Architect · Brasil</p>
+          <p class="kicker" data-i18n="kicker">Staff Engineer · Solutions Architect · Brasil</p>
           <h1><span class="gradient-text">Paulo Marne Barros</span></h1>
           <p class="typed-line" aria-live="polite"><strong id="typed"></strong><span class="cursor" aria-hidden="true"></span></p>
-          <p class="lead">Mais de 20 anos em arquitetura de soluções, sistemas distribuídos e microsserviços cloud-native. Este site separa o portfólio de arquitetura — pensado para recrutadores — da identidade da empresa MRN Serviços de TI.</p>
+          <p class="lead" data-i18n="lead">Mais de 20 anos em arquitetura de soluções, sistemas distribuídos e microsserviços cloud-native. Este site separa o portfólio de arquitetura — pensado para recrutadores — da identidade da empresa MRN Serviços de TI.</p>
           <div class="cta-row">
-            <a class="btn btn-primary" href="#arquitetura">Ver arquiteturas</a>
-            <a class="btn btn-ghost" href="#empresa">MRN / empresa</a>
-            <a class="btn btn-ghost" href="https://www.linkedin.com/in/paulo-b-8a42b5321" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a class="btn btn-primary" href="#arquitetura" data-i18n="ctaArch">Ver arquiteturas</a>
+            <a class="btn btn-ghost" href="#empresa" data-i18n="ctaMrn">MRN / empresa</a>
+            <a class="btn btn-ghost" href="https://www.linkedin.com/in/paulo-b-8a42b5321" target="_blank" rel="noopener noreferrer" data-i18n="ctaLinkedin" data-i18n-aria="ctaLinkedinAria">LinkedIn</a>
+            <a class="btn btn-ghost" href="https://www.github.com/paulomarne" target="_blank" rel="noopener noreferrer" data-i18n="ctaGithub" data-i18n-aria="ctaGithubAria">GitHub</a>
           </div>
           <div class="chip-row">
             <span class="chip">AWS</span>
             <span class="chip">GCP</span>
             <span class="chip">Azure</span>
-            <span class="chip">RAG / agentes</span>
-            <span class="chip">Mobile nativo</span>
+            <span class="chip" data-i18n="chipRag">RAG / agentes</span>
+            <span class="chip" data-i18n="chipMobile">Mobile nativo</span>
             <span class="chip">TOGAF · C4 · ADR</span>
           </div>
         </div>
@@ -63,9 +97,9 @@
 
       <section id="empresas" class="empresas-section" aria-labelledby="empresas-title">
         <div class="section-head reveal">
-          <div class="eyebrow">Trajetória</div>
-          <h2 id="empresas-title">Empresas onde atuei</h2>
-          <p>Nomes extraídos do currículo — empregadores e clientes citados na experiência profissional. Sem logotipos.</p>
+          <div class="eyebrow" data-i18n="companiesEyebrow">Trajetória</div>
+          <h2 id="empresas-title" data-i18n="companiesTitle">Empresas onde atuei</h2>
+          <p data-i18n="companiesLead">Nomes extraídos do currículo — empregadores e clientes citados na experiência profissional. Sem logotipos.</p>
         </div>
         <div class="company-cloud" id="company-cloud">
           <span class="co co-lg">ATI Pernambuco</span>
@@ -91,119 +125,119 @@
 
       <section id="arquitetura">
         <div class="section-head reveal">
-          <div class="eyebrow">Arquitetura · CV</div>
-          <h2>Soluções end-to-end para recrutadores</h2>
-          <p>Casos reais extraídos do currículo. Sem métricas inventadas. Cada cartão descreve o problema de negócio, as tecnologias usadas e a participação nas decisões de arquitetura.</p>
+          <div class="eyebrow" data-i18n="archEyebrow">Arquitetura · CV</div>
+          <h2 data-i18n="archTitle">Soluções end-to-end para recrutadores</h2>
+          <p data-i18n="archLead">Casos reais extraídos do currículo. Sem métricas inventadas. Cada cartão descreve o problema de negócio, as tecnologias usadas e a participação nas decisões de arquitetura.</p>
         </div>
 
         <div class="stat-grid reveal">
-          <div class="stat glass"><b>20+</b><span>anos em arquitetura e engenharia</span></div>
-          <div class="stat glass"><b>3 nuvens</b><span>AWS, GCP e Azure no currículo</span></div>
-          <div class="stat glass"><b>Setores</b><span>financeiro, governo, telecom e tecnologia</span></div>
+          <div class="stat glass"><b>20+</b><span data-i18n="statYears">anos em arquitetura e engenharia</span></div>
+          <div class="stat glass"><b data-i18n="statClouds">3 nuvens</b><span data-i18n="statCloudsSub">AWS, GCP e Azure no currículo</span></div>
+          <div class="stat glass"><b data-i18n="statSectors">Setores</b><span data-i18n="statSectorsSub">financeiro, governo, telecom e tecnologia</span></div>
         </div>
 
         <div class="cards" style="margin-top:20px">
           <article class="card glass reveal tilt">
             <h3>ATI Pernambuco</h3>
-            <p class="meta">01/2026 – atual · Agência Estadual de Tecnologia da Informação</p>
-            <p class="role">Arquiteto de Soluções e IA / Staff Engineer</p>
+            <p class="meta" data-i18n="atiMeta">01/2026 – atual · Agência Estadual de Tecnologia da Informação</p>
+            <p class="role" data-i18n="atiRole">Arquiteto de Soluções e IA / Staff Engineer</p>
             <ul>
-              <li>Evolução da plataforma corporativa de IA: arquitetura e modernização de serviços RAG, engenharia de prompts, observabilidade, resiliência e qualidade.</li>
-              <li>Pipelines RAG para análise documental de processos públicos, Termos de Referência (TRs) e ETPs.</li>
-              <li>Stack: Python, FastAPI, LangChain, Ollama, Milvus, MinIO e PostgreSQL, integrada ao ecossistema Java/Spring Boot em ambientes híbridos.</li>
-              <li>Agentes inteligentes, embeddings e busca vetorial; validação estruturada com Pydantic; resiliência com Tenacity (retry, timeout e falhas distribuídas).</li>
-              <li>Governança técnica: Pytest, revisão arquitetural, documentação, baseline e análise de PRs.</li>
+              <li data-i18n="ati1">Evolução da plataforma corporativa de IA: arquitetura e modernização de serviços RAG, engenharia de prompts, observabilidade, resiliência e qualidade.</li>
+              <li data-i18n="ati2">Pipelines RAG para análise documental de processos públicos, Termos de Referência (TRs) e ETPs.</li>
+              <li data-i18n="ati3">Stack: Python, FastAPI, LangChain, Ollama, Milvus, MinIO e PostgreSQL, integrada ao ecossistema Java/Spring Boot em ambientes híbridos.</li>
+              <li data-i18n="ati4">Agentes inteligentes, embeddings e busca vetorial; validação estruturada com Pydantic; resiliência com Tenacity (retry, timeout e falhas distribuídas).</li>
+              <li data-i18n="ati5">Governança técnica: Pytest, revisão arquitetural, documentação, baseline e análise de PRs.</li>
             </ul>
             <div class="tags"><span class="tag">RAG</span><span class="tag">LangChain</span><span class="tag">Ollama</span><span class="tag">Milvus</span><span class="tag">FastAPI</span><span class="tag">Spring Boot</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Tribunal de Justiça da Bahia</h3>
-            <p class="meta">12/2024 – 12/2025</p>
-            <p class="role">Arquitetura e ciclo de vida completo de software</p>
+            <p class="meta" data-i18n="dateTjba">12/2024 – 12/2025</p>
+            <p class="role" data-i18n="tjbaRole">Arquitetura e ciclo de vida completo de software</p>
             <ul>
-              <li>ADRs, análise de trade-offs, governança arquitetural e alinhamento entre tecnologia e negócio.</li>
-              <li>Modernização de sistemas para o TJBA e o Conselho Nacional de Justiça.</li>
-              <li>React, Node.js, Java, Spring Boot e Swift; documentação em C4, blueprints e BPMN.</li>
-              <li>CI/CD com Docker, Kubernetes, Maven e JFrog; automação com RPA e Python.</li>
+              <li data-i18n="tjba1">ADRs, análise de trade-offs, governança arquitetural e alinhamento entre tecnologia e negócio.</li>
+              <li data-i18n="tjba2">Modernização de sistemas para o TJBA e o Conselho Nacional de Justiça.</li>
+              <li data-i18n="tjba3">React, Node.js, Java, Spring Boot e Swift; documentação em C4, blueprints e BPMN.</li>
+              <li data-i18n="tjba4">CI/CD com Docker, Kubernetes, Maven e JFrog; automação com RPA e Python.</li>
             </ul>
             <div class="tags"><span class="tag">ADR</span><span class="tag">C4</span><span class="tag">Kubernetes</span><span class="tag">Spring Boot</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Jeitto</h3>
-            <p class="meta">01/2024 – 09/2024</p>
-            <p class="role">Arquiteto de Soluções</p>
+            <p class="meta" data-i18n="dateJeitto">01/2024 – 09/2024</p>
+            <p class="role" data-i18n="jeittoRole">Arquiteto de Soluções</p>
             <ul>
-              <li>Desenho de solução financeira em nuvem com GCP (PaaS, CaaS, GKE, BigQuery) e integrações via Apigee; análise de dados no Snowflake.</li>
-              <li>Apoio a modelos de recuperação de desastres (DR) para Azure.</li>
-              <li>Treinamentos oficiais Microsoft no período: AZ-900, AZ-305 e SC-200, com badges obtidos.</li>
-              <li>Documentação em Blueprint, BPMN e C4; frameworks BIAN e TOGAF.</li>
-              <li>Arquitetura legado monolítica e Saga orquestrado com DDD; implantação de SonarQube, New Relic e Kong.</li>
+              <li data-i18n="jeitto1">Desenho de solução financeira em nuvem com GCP (PaaS, CaaS, GKE, BigQuery) e integrações via Apigee; análise de dados no Snowflake.</li>
+              <li data-i18n="jeitto2">Apoio a modelos de recuperação de desastres (DR) para Azure.</li>
+              <li data-i18n="jeitto3">Treinamentos oficiais Microsoft no período: AZ-900, AZ-305 e SC-200, com badges obtidos.</li>
+              <li data-i18n="jeitto4">Documentação em Blueprint, BPMN e C4; frameworks BIAN e TOGAF.</li>
+              <li data-i18n="jeitto5">Arquitetura legado monolítica e Saga orquestrado com DDD; implantação de SonarQube, New Relic e Kong.</li>
             </ul>
             <div class="tags"><span class="tag">GCP</span><span class="tag">GKE</span><span class="tag">BigQuery</span><span class="tag">Apigee</span><span class="tag">Snowflake</span><span class="tag">Azure DR</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Banco Rendimento</h3>
-            <p class="meta">04/2022 – 06/2023</p>
-            <p class="role">Arquiteto de Soluções</p>
+            <p class="meta" data-i18n="dateRend">04/2022 – 06/2023</p>
+            <p class="role" data-i18n="jeittoRole">Arquiteto de Soluções</p>
             <ul>
-              <li>Arquitetura modular de aplicativos mobile: nativo legado e novas frentes híbridas em Flutter e React Native, com reúso e modularização.</li>
-              <li>Análise de custos de serviços na AWS com padrões Saga (orquestrado e coreografado) para microsserviços.</li>
-              <li>Observabilidade com Dynatrace, feature toggles, tokenização e mapas de calor; quality gate com SonarQube.</li>
-              <li>Esteiras CI/CD com Jenkins, Bitrise e Azure DevOps.</li>
+              <li data-i18n="rend1">Arquitetura modular de aplicativos mobile: nativo legado e novas frentes híbridas em Flutter e React Native, com reúso e modularização.</li>
+              <li data-i18n="rend2">Análise de custos de serviços na AWS com padrões Saga (orquestrado e coreografado) para microsserviços.</li>
+              <li data-i18n="rend3">Observabilidade com Dynatrace, feature toggles, tokenização e mapas de calor; quality gate com SonarQube.</li>
+              <li data-i18n="rend4">Esteiras CI/CD com Jenkins, Bitrise e Azure DevOps.</li>
             </ul>
             <div class="tags"><span class="tag">Flutter</span><span class="tag">React Native</span><span class="tag">AWS</span><span class="tag">Saga</span><span class="tag">Dynatrace</span><span class="tag">SonarQube</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Banco Bradesco</h3>
-            <p class="meta">02/2021 – 03/2022</p>
-            <p class="role">Arquiteto de Aplicações</p>
+            <p class="meta" data-i18n="dateBrad">02/2021 – 03/2022</p>
+            <p class="role" data-i18n="bradRole">Arquiteto de Aplicações</p>
             <ul>
-              <li>Melhorias em novo produto para clientes pessoa jurídica e consultoria de prevenção a fraudes, em app monolítico em refatoração.</li>
-              <li>DDD e TOGAF; Android nativo em Kotlin (app modularizado e API REST); também React Native.</li>
-              <li>Análise de custos AWS com Saga; Dynatrace; testes de segurança (MITM), criptografia e tokenização de dados sensíveis.</li>
-              <li>Squad de 3 pessoas, sprints de 2 semanas, Atlassian (GitHub, Jira, Confluence).</li>
+              <li data-i18n="brad1">Melhorias em novo produto para clientes pessoa jurídica e consultoria de prevenção a fraudes, em app monolítico em refatoração.</li>
+              <li data-i18n="brad2">DDD e TOGAF; Android nativo em Kotlin (app modularizado e API REST); também React Native.</li>
+              <li data-i18n="brad3">Análise de custos AWS com Saga; Dynatrace; testes de segurança (MITM), criptografia e tokenização de dados sensíveis.</li>
+              <li data-i18n="brad4">Squad de 3 pessoas, sprints de 2 semanas, Atlassian (GitHub, Jira, Confluence).</li>
             </ul>
             <div class="tags"><span class="tag">Kotlin</span><span class="tag">DDD</span><span class="tag">TOGAF</span><span class="tag">AWS</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Meta</h3>
-            <p class="meta">10/2019 – 01/2021</p>
-            <p class="role">Arquiteto / Especialista Mobile</p>
+            <p class="meta" data-i18n="dateMeta">10/2019 – 01/2021</p>
+            <p class="role" data-i18n="metaRole">Arquiteto / Especialista Mobile</p>
             <ul>
-              <li>CI/CD interno, novos padrões de desenvolvimento mobile em Kotlin e correção de bugs críticos em clientes de grande porte do grupo Michelin.</li>
-              <li>Android nativo em Java 8 com Bluetooth e API REST ligada a rastreador veicular; também React Native.</li>
-              <li>Serviços REST em Node.js no Kubernetes (Docker) com PostgreSQL; dashboards no Grafana; uso da nuvem Azure; integração com Kafka.</li>
-              <li>Análise de custos AWS com Saga; squad de 7 pessoas.</li>
+              <li data-i18n="meta1">CI/CD interno, novos padrões de desenvolvimento mobile em Kotlin e correção de bugs críticos em clientes de grande porte do grupo Michelin.</li>
+              <li data-i18n="meta2">Android nativo em Java 8 com Bluetooth e API REST ligada a rastreador veicular; também React Native.</li>
+              <li data-i18n="meta3">Serviços REST em Node.js no Kubernetes (Docker) com PostgreSQL; dashboards no Grafana; uso da nuvem Azure; integração com Kafka.</li>
+              <li data-i18n="meta4">Análise de custos AWS com Saga; squad de 7 pessoas.</li>
             </ul>
             <div class="tags"><span class="tag">Kotlin</span><span class="tag">CI/CD</span><span class="tag">Kubernetes</span><span class="tag">Azure</span><span class="tag">Kafka</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>BRQ Digital Solution — Next (Bradesco)</h3>
-            <p class="meta">01/2017 – 08/2019</p>
-            <p class="role">Arquiteto de Sistemas / Desenvolvedor Mobile</p>
+            <p class="meta" data-i18n="dateBrq">01/2017 – 08/2019</p>
+            <p class="role" data-i18n="brqRole">Arquiteto de Sistemas / Desenvolvedor Mobile</p>
             <ul>
-              <li>Desenvolvimento e manutenção do aplicativo bancário Next do Bradesco, em Android (Java) e iOS nativo (Swift 4).</li>
-              <li>Liderança da equipe de sustentação; Git-Flow; POCs em Kotlin para integração de novos parceiros.</li>
-              <li>SDKs AppsFlyer, Facebook e Crashlytics; UX/UI padronizada; Atlassian (Bamboo, Bitbucket, Jira, Confluence).</li>
+              <li data-i18n="brq1">Desenvolvimento e manutenção do aplicativo bancário Next do Bradesco, em Android (Java) e iOS nativo (Swift 4).</li>
+              <li data-i18n="brq2">Liderança da equipe de sustentação; Git-Flow; POCs em Kotlin para integração de novos parceiros.</li>
+              <li data-i18n="brq3">SDKs AppsFlyer, Facebook e Crashlytics; UX/UI padronizada; Atlassian (Bamboo, Bitbucket, Jira, Confluence).</li>
             </ul>
-            <div class="tags"><span class="tag">Swift 4</span><span class="tag">Android / Java</span><span class="tag">Kotlin</span><span class="tag">Sustentação</span></div>
+            <div class="tags"><span class="tag">Swift 4</span><span class="tag">Android / Java</span><span class="tag">Kotlin</span><span class="tag" data-i18n="tagSupport">Sustentação</span></div>
           </article>
 
           <article class="card glass reveal tilt">
             <h3>Marne Consultoria</h3>
-            <p class="meta">03/2014 – 10/2016</p>
-            <p class="role">Diretor / Arquiteto de Solução</p>
+            <p class="meta" data-i18n="dateMarne">03/2014 – 10/2016</p>
+            <p class="role" data-i18n="marneRole">Diretor / Arquiteto de Solução</p>
             <ul>
-              <li>Empresa própria de soluções mobile, web e desktop integradas por API, XML, socket e WebSocket.</li>
-              <li>Apps nativos publicados na Google Play (Android Studio) e na App Store (Xcode / iOS).</li>
-              <li>Back-end REST em Java 8 e Spring Boot (Web, MVC, Security, OAuth2, Data JPA/JDBC), UI com Bootstrap.</li>
-              <li>Ambientes AWS: EC2 e RDS (PostgreSQL); deploy no Heroku e no AWS Elastic Beanstalk; testes com JUnit e Mockito.</li>
+              <li data-i18n="marne1">Empresa própria de soluções mobile, web e desktop integradas por API, XML, socket e WebSocket.</li>
+              <li data-i18n="marne2">Apps nativos publicados na Google Play (Android Studio) e na App Store (Xcode / iOS).</li>
+              <li data-i18n="marne3">Back-end REST em Java 8 e Spring Boot (Web, MVC, Security, OAuth2, Data JPA/JDBC), UI com Bootstrap.</li>
+              <li data-i18n="marne4">Ambientes AWS: EC2 e RDS (PostgreSQL); deploy no Heroku e no AWS Elastic Beanstalk; testes com JUnit e Mockito.</li>
             </ul>
             <div class="tags"><span class="tag">iOS</span><span class="tag">Android</span><span class="tag">Spring Boot</span><span class="tag">EC2</span><span class="tag">RDS</span><span class="tag">Elastic Beanstalk</span></div>
           </article>
@@ -211,54 +245,54 @@
 
         <div class="section-head reveal" style="margin-top:48px">
           <div class="eyebrow">Multicloud</div>
-          <h2>Nuvens e serviços no currículo</h2>
-          <p>Somente o que aparece na experiência ou no perfil técnico. Treinamentos estão na seção de certificados.</p>
+          <h2 data-i18n="cloudsTitle">Nuvens e serviços no currículo</h2>
+          <p data-i18n="cloudsLead">Somente o que aparece na experiência ou no perfil técnico. Treinamentos estão na seção de certificados.</p>
         </div>
         <div class="cloud-grid">
           <article class="cloud-col glass aws reveal">
             <h3><span class="logo-dot"></span> AWS</h3>
             <ul>
-              <li>EC2 e RDS (PostgreSQL) — Marne Consultoria</li>
-              <li>Elastic Beanstalk — deploy das APIs Spring Boot</li>
-              <li>SQS e SNS — filas e eventos no perfil técnico</li>
-              <li>EKS — Kubernetes citado junto de AKS e GKE</li>
-              <li>CloudFormation — IaC no perfil</li>
-              <li>Análise de custos AWS + Saga — Rendimento, Bradesco e Meta</li>
+              <li data-i18n="aws1">EC2 e RDS (PostgreSQL) — Marne Consultoria</li>
+              <li data-i18n="aws2">Elastic Beanstalk — deploy das APIs Spring Boot</li>
+              <li data-i18n="aws3">SQS e SNS — filas e eventos no perfil técnico</li>
+              <li data-i18n="aws4">EKS — Kubernetes citado junto de AKS e GKE</li>
+              <li data-i18n="aws5">CloudFormation — IaC no perfil</li>
+              <li data-i18n="aws6">Análise de custos AWS + Saga — Rendimento, Bradesco e Meta</li>
             </ul>
           </article>
           <article class="cloud-col glass gcp reveal">
             <h3><span class="logo-dot"></span> Google Cloud</h3>
             <ul>
-              <li>GKE, PaaS e CaaS — Jeitto</li>
-              <li>BigQuery — análise de dados</li>
-              <li>Apigee — integrações de API</li>
-              <li>Pub/Sub — mensageria no perfil técnico</li>
-              <li>Snowflake — análise de dados na Jeitto (junto ao desenho GCP)</li>
-              <li>Soluções multi-cloud desenhadas também para GCP</li>
+              <li data-i18n="gcp1">GKE, PaaS e CaaS — Jeitto</li>
+              <li data-i18n="gcp2">BigQuery — análise de dados</li>
+              <li data-i18n="gcp3">Apigee — integrações de API</li>
+              <li data-i18n="gcp4">Pub/Sub — mensageria no perfil técnico</li>
+              <li data-i18n="gcp5">Snowflake — análise de dados na Jeitto (junto ao desenho GCP)</li>
+              <li data-i18n="gcp6">Soluções multi-cloud desenhadas também para GCP</li>
             </ul>
           </article>
           <article class="cloud-col glass azure reveal">
             <h3><span class="logo-dot"></span> Microsoft Azure</h3>
             <ul>
-              <li>AKS — Kubernetes no perfil técnico</li>
-              <li>Azure Service Bus — mensageria</li>
-              <li>Azure OpenAI — integração de IA generativa</li>
-              <li>Azure DevOps — CI/CD no Banco Rendimento</li>
-              <li>Nuvem Azure — serviços e dashboards na Meta</li>
-              <li>Modelo de DR para Azure — Jeitto</li>
+              <li data-i18n="az1">AKS — Kubernetes no perfil técnico</li>
+              <li data-i18n="az2">Azure Service Bus — mensageria</li>
+              <li data-i18n="az3">Azure OpenAI — integração de IA generativa</li>
+              <li data-i18n="az4">Azure DevOps — CI/CD no Banco Rendimento</li>
+              <li data-i18n="az5">Nuvem Azure — serviços e dashboards na Meta</li>
+              <li data-i18n="az6">Modelo de DR para Azure — Jeitto</li>
             </ul>
           </article>
         </div>
 
         <div class="section-head reveal">
-          <div class="eyebrow">Referência</div>
-          <h2>Arquitetura de referência (APIs e eventos)</h2>
-          <p>Diagrama ilustrativo, alinhado às práticas do currículo (APIs REST, microsserviços, mensageria multi-cloud, dados e observabilidade). Não representa um cliente específico.</p>
+          <div class="eyebrow" data-i18n="diagEyebrow">Referência</div>
+          <h2 data-i18n="diagTitle">Arquitetura de referência (APIs e eventos)</h2>
+          <p data-i18n="diagLead">Diagrama ilustrativo, alinhado às práticas do currículo (APIs REST, microsserviços, mensageria multi-cloud, dados e observabilidade). Não representa um cliente específico.</p>
         </div>
         <div class="diagram-wrap glass reveal">
           <svg viewBox="0 0 1100 520" role="img" aria-labelledby="diagTitle diagDesc">
-            <title id="diagTitle">Arquitetura de referência multi-cloud orientada a eventos e APIs</title>
-            <desc id="diagDesc">Clientes web e mobile se conectam a um API gateway. Os serviços publicam eventos em barramentos AWS SQS/SNS, GCP Pub/Sub e Azure Service Bus, persistem dados e emitem telemetria.</desc>
+            <title id="diagTitle" data-i18n="diagSvgTitle">Arquitetura de referência multi-cloud orientada a eventos e APIs</title>
+            <desc id="diagDesc" data-i18n="diagSvgDesc">Clientes web e mobile se conectam a um API gateway. Os serviços publicam eventos em barramentos AWS SQS/SNS, GCP Pub/Sub e Azure Service Bus, persistem dados e emitem telemetria.</desc>
             <defs>
               <linearGradient id="lineG" x1="0" x2="1">
                 <stop offset="0" stop-color="#58a6ff"/>
@@ -268,24 +302,24 @@
             </defs>
             <rect x="20" y="30" width="200" height="80" rx="14" fill="#0d1117" stroke="#58a6ff"/>
             <text x="120" y="62" text-anchor="middle" fill="#e6edf3" font-size="15" font-family="IBM Plex Sans, sans-serif">Web / Angular · React</text>
-            <text x="120" y="86" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">Apps de negócio</text>
+            <text x="120" y="86" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif" data-i18n="diagBizApps">Apps de negócio</text>
             <rect x="20" y="140" width="200" height="80" rx="14" fill="#0d1117" stroke="#7ee787"/>
             <text x="120" y="172" text-anchor="middle" fill="#e6edf3" font-size="15" font-family="IBM Plex Sans, sans-serif">Mobile</text>
             <text x="120" y="196" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">Swift · Kotlin · Flutter</text>
             <rect x="20" y="280" width="200" height="80" rx="14" fill="#0d1117" stroke="#b392f0"/>
-            <text x="120" y="312" text-anchor="middle" fill="#e6edf3" font-size="15" font-family="IBM Plex Sans, sans-serif">Integrações</text>
+            <text x="120" y="312" text-anchor="middle" fill="#e6edf3" font-size="15" font-family="IBM Plex Sans, sans-serif" data-i18n="diagIntegrations">Integrações</text>
             <text x="120" y="336" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">Apigee · Kong</text>
 
             <rect x="300" y="140" width="210" height="100" rx="16" fill="#102033" stroke="#56d4dd" filter="url(#glow)"/>
             <text x="405" y="184" text-anchor="middle" fill="#e6edf3" font-size="16" font-family="IBM Plex Sans, sans-serif">API Gateway</text>
-            <text x="405" y="208" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">REST · autenticação</text>
+            <text x="405" y="208" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif" data-i18n="diagAuth">REST · autenticação</text>
 
             <rect x="590" y="40" width="200" height="70" rx="14" fill="#0d1117" stroke="#58a6ff"/>
-            <text x="690" y="82" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif">Microsserviços</text>
+            <text x="690" y="82" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif" data-i18n="diagMicro">Microsserviços</text>
             <rect x="590" y="130" width="200" height="70" rx="14" fill="#0d1117" stroke="#ffa657"/>
             <text x="690" y="172" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif">Saga / DDD</text>
             <rect x="590" y="220" width="200" height="70" rx="14" fill="#0d1117" stroke="#7ee787"/>
-            <text x="690" y="262" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif">IA · RAG · agentes</text>
+            <text x="690" y="262" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif" data-i18n="diagIa">IA · RAG · agentes</text>
 
             <rect x="860" y="30" width="220" height="78" rx="14" fill="#1a1408" stroke="#ff9900"/>
             <text x="970" y="62" text-anchor="middle" fill="#ff9900" font-size="13" font-family="IBM Plex Sans, sans-serif">AWS</text>
@@ -298,10 +332,10 @@
             <text x="970" y="280" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">Service Bus · AKS · OpenAI</text>
 
             <rect x="300" y="390" width="250" height="78" rx="14" fill="#0d1117" stroke="#58a6ff"/>
-            <text x="425" y="422" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif">Dados</text>
+            <text x="425" y="422" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif" data-i18n="diagData">Dados</text>
             <text x="425" y="444" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">PostgreSQL · Milvus · MinIO</text>
             <rect x="590" y="390" width="250" height="78" rx="14" fill="#0d1117" stroke="#b392f0"/>
-            <text x="715" y="422" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif">Observabilidade</text>
+            <text x="715" y="422" text-anchor="middle" fill="#e6edf3" font-size="14" font-family="IBM Plex Sans, sans-serif" data-i18n="diagObs">Observabilidade</text>
             <text x="715" y="444" text-anchor="middle" fill="#9aa4b2" font-size="12" font-family="IBM Plex Sans, sans-serif">Dynatrace · New Relic · Grafana</text>
 
             <path class="flow" d="M220 70 C260 70 260 180 300 180" fill="none" stroke="url(#lineG)" stroke-width="2"/>
@@ -316,15 +350,15 @@
             <path class="flow" d="M690 290 C690 360 500 360 425 390" fill="none" stroke="url(#lineG)" stroke-width="2"/>
             <path class="flow" d="M690 290 C720 350 715 360 715 390" fill="none" stroke="#b392f0" stroke-width="2"/>
           </svg>
-          <p class="note">Animação das linhas indica o fluxo de dados. Com “reduzir movimento” ativado no sistema, o fluxo permanece estático.</p>
+          <p class="note" data-i18n="diagNote">Animação das linhas indica o fluxo de dados. Com “reduzir movimento” ativado no sistema, o fluxo permanece estático.</p>
         </div>
       </section>
 
       <section id="certificados">
         <div class="section-head reveal">
           <div class="eyebrow">AWS e Azure</div>
-          <h2>Certificados, cursos e pins</h2>
-          <p>Os itens da AWS abaixo são cursos e treinamentos do currículo — não certificações de exame. Na Azure, o CV registra treinamento oficial AZ-900 (KA Solution) e, na Jeitto, treinamentos oficiais Microsoft AZ-900, AZ-305 e SC-200, com badges. Slots de pin só aparecem se você colocar a imagem em <code>assets/certs/</code>.</p>
+          <h2 data-i18n="certsTitle">Certificados, cursos e pins</h2>
+          <p data-i18n-html="certsLead">Os itens da AWS abaixo são cursos e treinamentos do currículo — não certificações de exame. Na Azure, o CV registra treinamento oficial AZ-900 (KA Solution) e, na Jeitto, treinamentos oficiais Microsoft AZ-900, AZ-305 e SC-200, com badges. Slots de pin só aparecem se você colocar a imagem em <code>assets/certs/</code>.</p>
         </div>
         <div class="certs">
           <article class="badge glass aws reveal">
@@ -332,14 +366,14 @@
               <div class="badge-face">
                 <span class="issuer">Amazon Web Services</span>
                 <div>
-                  <span class="label-course">Curso · não é certificação</span>
+                  <span class="label-course" data-i18n="labelCourse">Curso · não é certificação</span>
                   <h3>Exam Readiness: AWS Certified Machine Learning – Specialty</h3>
                 </div>
-                <p class="meta">Conclusão em 25/06/2024</p>
+                <p class="meta" data-i18n="completedMl">Conclusão em 25/06/2024</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Preparação para o exame de Machine Learning Specialty. Listado no currículo em “Cursos, Treinamentos e Certificações”.</p>
-                <p class="meta">Vire o cartão para o título · pin opcional abaixo</p>
+                <p data-i18n="mlBack">Preparação para o exame de Machine Learning Specialty. Listado no currículo em “Cursos, Treinamentos e Certificações”.</p>
+                <p class="meta" data-i18n="flipCardPin">Vire o cartão para o título · pin opcional abaixo</p>
               </div>
             </div>
           </article>
@@ -348,14 +382,14 @@
               <div class="badge-face">
                 <span class="issuer">Amazon Web Services</span>
                 <div>
-                  <span class="label-course">Curso · não é certificação</span>
+                  <span class="label-course" data-i18n="labelCourse">Curso · não é certificação</span>
                   <h3>AWS Cloud Practitioner Essentials</h3>
                 </div>
-                <p class="meta">Conclusão em 05/09/2024</p>
+                <p class="meta" data-i18n="completedCp">Conclusão em 05/09/2024</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Fundamentos da nuvem AWS. Tratado no currículo como curso concluído, não como badge de exame Certified Cloud Practitioner.</p>
-                <p class="meta">Vire o cartão para o título</p>
+                <p data-i18n="cpBack">Fundamentos da nuvem AWS. Tratado no currículo como curso concluído, não como badge de exame Certified Cloud Practitioner.</p>
+                <p class="meta" data-i18n="flipCard">Vire o cartão para o título</p>
               </div>
             </div>
           </article>
@@ -364,13 +398,13 @@
               <div class="badge-face">
                 <span class="issuer">Amazon Web Services</span>
                 <div>
-                  <span class="label-course">Treinamento</span>
-                  <h3>Kubernetes / Rancher / Serverless com AWS</h3>
+                  <span class="label-course" data-i18n="labelTraining">Treinamento</span>
+                  <h3 data-i18n="k8sCourseTitle">Kubernetes / Rancher / Serverless com AWS</h3>
                 </div>
-                <p class="meta">Sem data específica no currículo</p>
+                <p class="meta" data-i18n="noSpecificDate">Sem data específica no currículo</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Treinamento citado no currículo junto de Kubernetes, Rancher e serverless na AWS.</p>
+                <p data-i18n="k8sBack">Treinamento citado no currículo junto de Kubernetes, Rancher e serverless na AWS.</p>
               </div>
             </div>
           </article>
@@ -379,13 +413,13 @@
               <div class="badge-face">
                 <span class="issuer">Microsoft Azure</span>
                 <div>
-                  <span class="label-course">Treinamento oficial</span>
+                  <span class="label-course" data-i18n="labelOfficial">Treinamento oficial</span>
                   <h3>Azure AZ-900 — KA Solution</h3>
                 </div>
-                <p class="meta">Treinamento oficial Azure / AZ-900</p>
+                <p class="meta" data-i18n="az900Meta">Treinamento oficial Azure / AZ-900</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Registrado no currículo como “Treinamento oficial Azure / AZ-900 – KA Solution”. Não há data nem número de credencial no CV.</p>
+                <p data-i18n="az900Back">Registrado no currículo como “Treinamento oficial Azure / AZ-900 – KA Solution”. Não há data nem número de credencial no CV.</p>
               </div>
             </div>
           </article>
@@ -394,13 +428,13 @@
               <div class="badge-face">
                 <span class="issuer">Microsoft Azure</span>
                 <div>
-                  <span class="label-course">Treinamento + badge</span>
+                  <span class="label-course" data-i18n="labelTrainBadge">Treinamento + badge</span>
                   <h3>AZ-305</h3>
                 </div>
-                <p class="meta">Durante a Jeitto · 01/2024 – 09/2024</p>
+                <p class="meta" data-i18n="az305Meta">Durante a Jeitto · 01/2024 – 09/2024</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Treinamento oficial Microsoft AZ-305 citado na experiência da Jeitto, junto com a obtenção de badges. O CV não afirma aprovação no exame de certificação.</p>
+                <p data-i18n="az305Back">Treinamento oficial Microsoft AZ-305 citado na experiência da Jeitto, junto com a obtenção de badges. O CV não afirma aprovação no exame de certificação.</p>
               </div>
             </div>
           </article>
@@ -409,31 +443,31 @@
               <div class="badge-face">
                 <span class="issuer">Microsoft Azure</span>
                 <div>
-                  <span class="label-course">Treinamento + badge</span>
+                  <span class="label-course" data-i18n="labelTrainBadge">Treinamento + badge</span>
                   <h3>SC-200</h3>
                 </div>
-                <p class="meta">Durante a Jeitto · 01/2024 – 09/2024</p>
+                <p class="meta" data-i18n="az305Meta">Durante a Jeitto · 01/2024 – 09/2024</p>
               </div>
               <div class="badge-face badge-back glass">
-                <p>Treinamento oficial Microsoft SC-200 citado na Jeitto, com badges. Sem credencial de exame no currículo.</p>
+                <p data-i18n="sc200Back">Treinamento oficial Microsoft SC-200 citado na Jeitto, com badges. Sem credencial de exame no currículo.</p>
               </div>
             </div>
           </article>
         </div>
 
-        <h3 class="reveal" style="margin-top:28px">Pins (imagens opcionais)</h3>
-        <p class="note reveal">Coloque os arquivos na pasta <code>assets/certs/</code>. Veja os nomes no README dessa pasta. Sem arquivo, o espaço some.</p>
+        <h3 class="reveal" style="margin-top:28px" data-i18n="pinsTitle">Pins (imagens opcionais)</h3>
+        <p class="note reveal" data-i18n-html="pinsNote">Coloque os arquivos na pasta <code>assets/certs/</code>. Veja os nomes no README dessa pasta. Sem arquivo, o espaço some.</p>
         <div class="pins" id="pinGrid"></div>
       </section>
 
       <section class="mrn-band" id="empresa">
         <div class="mrn-inner">
           <div class="reveal">
-            <div class="eyebrow mrn">Empresa</div>
+            <div class="eyebrow mrn" data-i18n="mrnEyebrow">Empresa</div>
             <h2>MRN Serviços de TI</h2>
-            <p style="color:var(--muted)">Identidade separada do portfólio pessoal de arquitetura. A MRN desenvolve o <strong style="color:var(--text)">MRN Sentinela</strong>, um SaaS de monitoramento de segurança que pode rodar em qualquer nuvem. A inteligência artificial sugere o que fazer; quem decide é a pessoa responsável.</p>
+            <p style="color:var(--muted)" data-i18n-html="mrnLead">Identidade separada do portfólio pessoal de arquitetura. A MRN desenvolve o <strong style="color:var(--text)">MRN Sentinela</strong>, um SaaS de monitoramento de segurança que pode rodar em qualquer nuvem. A inteligência artificial sugere o que fazer; quem decide é a pessoa responsável.</p>
             <div class="cta-row">
-              <a class="btn btn-primary" href="https://mrnbrasil.com" rel="noopener noreferrer">Abrir mrnbrasil.com</a>
+              <a class="btn btn-primary" href="https://mrnbrasil.com" rel="noopener noreferrer" data-i18n="ctaMrnSite">Abrir mrnbrasil.com</a>
             </div>
           </div>
           <aside class="mrn-card glass reveal">
@@ -443,9 +477,9 @@
             </svg>
             <h3>MRN Sentinela</h3>
             <ul>
-              <li>Monitoramento de segurança como serviço</li>
-              <li>Nuvem à escolha do cliente</li>
-              <li>IA sugere; o usuário decide o bloqueio ou o banimento</li>
+              <li data-i18n="sent1">Monitoramento de segurança como serviço</li>
+              <li data-i18n="sent2">Nuvem à escolha do cliente</li>
+              <li data-i18n="sent3">IA sugere; o usuário decide o bloqueio ou o banimento</li>
             </ul>
           </aside>
         </div>
@@ -453,45 +487,46 @@
 
       <section id="projetos">
         <div class="section-head reveal">
-          <div class="eyebrow">Paralelos</div>
-          <h2>Projetos e apps</h2>
-          <p>Os mesmos aplicativos já publicados em paulomarne.github.io, com as políticas de privacidade originais.</p>
+          <div class="eyebrow" data-i18n="projEyebrow">Paralelos</div>
+          <h2 data-i18n="projTitle">Projetos e apps</h2>
+          <p data-i18n="projLead">Os mesmos aplicativos já publicados em paulomarne.github.io, com as políticas de privacidade originais.</p>
         </div>
         <div class="apps">
           <a class="app glass reveal tilt" href="fornolandia/">
             <h3>Fornolândia</h3>
-            <p>Simulador de confeitaria e padaria.</p>
-            <span>Política de privacidade →</span>
+            <p data-i18n="fornoDesc">Simulador de confeitaria e padaria.</p>
+            <span data-i18n="privacy">Política de privacidade →</span>
           </a>
           <a class="app glass reveal tilt" href="ternotoga/">
             <h3>Terno & Toga</h3>
-            <p>Gestão de escritório de advocacia, com fins educativos.</p>
-            <span>Política de privacidade →</span>
+            <p data-i18n="togaDesc">Gestão de escritório de advocacia, com fins educativos.</p>
+            <span data-i18n="privacy">Política de privacidade →</span>
           </a>
           <a class="app glass reveal tilt" href="quemsabeganha/">
             <h3>Quem Sabe Ganha</h3>
-            <p>Quiz de perguntas e respostas. Não é app de apostas, sem prêmios em dinheiro e sem cobranças.</p>
-            <span>Política de privacidade →</span>
+            <p data-i18n="quizDesc">Quiz de perguntas e respostas. Não é app de apostas, sem prêmios em dinheiro e sem cobranças.</p>
+            <span data-i18n="privacy">Política de privacidade →</span>
           </a>
         </div>
       </section>
 
       <section id="contato">
         <div class="section-head reveal">
-          <div class="eyebrow">Contato</div>
-          <h2>Vamos conversar</h2>
+          <div class="eyebrow" data-i18n="contactEyebrow">Contato</div>
+          <h2 data-i18n="contactTitle">Vamos conversar</h2>
         </div>
         <div class="contact">
           <a class="glass reveal" href="mailto:paulomarnebarros@gmail.com">✉️ paulomarnebarros@gmail.com</a>
           <a class="glass reveal" href="https://github.com/paulomarne" rel="noopener noreferrer">💻 github.com/paulomarne</a>
-          <a class="glass reveal" href="https://www.linkedin.com/in/paulo-b-8a42b5321" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+          <a class="glass reveal" href="https://www.linkedin.com/in/paulo-b-8a42b5321" target="_blank" rel="noopener noreferrer" data-i18n="ctaLinkedin" data-i18n-aria="ctaLinkedinAria">LinkedIn</a>
         </div>
       </section>
     </main>
     <footer>
-      <p>Paulo Marne Barros · portfólio pessoal de arquitetura e página da Marne Studio / MRN. Sem métricas inventadas.</p>
+      <p data-i18n="footer">Paulo Marne Barros · portfólio pessoal de arquitetura e página da Marne Studio / MRN. Sem métricas inventadas.</p>
     </footer>
   </div>
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
   <script src="assets/particle-morph.js"></script>
 <script data-goatcounter="https://paulomarne.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
